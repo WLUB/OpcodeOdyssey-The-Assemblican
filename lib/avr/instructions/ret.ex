@@ -1,4 +1,4 @@
-defmodule Assembler.AVR.Instructions.RET do
+defmodule Assembler.AVR.Instruction.RET do
   @moduledoc """
   Return from Subroutine
 
@@ -9,7 +9,7 @@ defmodule Assembler.AVR.Instructions.RET do
   Words   1 (2 bytes)
 
   """
-  use Assembler.Avr.Instructions.Base,
+  use Assembler.AVR.Instruction,
   size: 2,
   construct: fn
     %RET{} = _ -> 0b1001010100001000

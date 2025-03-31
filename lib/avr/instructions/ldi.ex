@@ -1,4 +1,4 @@
-defmodule Assembler.AVR.Instructions.LDI do
+defmodule Assembler.AVR.Instruction.LDI do
   @moduledoc """
   Load Immediate
   Loads an 8-bit constant directly to register 16 to 31.
@@ -7,14 +7,14 @@ defmodule Assembler.AVR.Instructions.LDI do
   Words   1 (2 bytes)
 
   """
-  use Assembler.Avr.Instructions.Base,
+  use Assembler.AVR.Instruction,
   size: 2,
   construct: fn
-    %LDI{parameters: [d, k]} when d < 16 or d > 31  ->
-      throw "Invalid LDI register! Need to be in range 16-31"
+    %LDI{parameters: [d, _k]} when d < 16 or d > 31  ->
+      raise "Invalid LDI register! Need to be in range 16-31"
 
-    %LDI{parameters: [d, k]} when k < 0 or k > 255 ->
-      throw "Invalid LDI immediate! Need to be in range 0-255"
+    %LDI{parameters: [_d, k]} when k < 0 or k > 255 ->
+      raise "Invalid LDI immediate! Need to be in range 0-255"
 
     %LDI{parameters: [d, k]} ->
       k_h = (k &&& 0xF0) >>> 4

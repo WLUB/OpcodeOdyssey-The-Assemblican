@@ -8,7 +8,7 @@ defmodule Assembler do
   def main(["avr", "hex", file]) when is_binary(file) do
     file
     |> FileManger.read_file()
-    |> FileManger.text_to_instructions()
+    |> Build.text_to_instructions()
     |> Build.encode_instruction()
     |> Build.generate_hex()
     |> FileManger.convert_to_output(file)

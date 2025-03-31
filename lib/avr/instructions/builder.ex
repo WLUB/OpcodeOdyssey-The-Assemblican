@@ -1,4 +1,4 @@
-defmodule Assembler.AVR.Instructions.Builder do
+defmodule Assembler.AVR.Instruction.Builder do
   @moduledoc """
   A helper function to get access to all the instructions
   """
@@ -50,7 +50,7 @@ defmodule Assembler.AVR.Instructions.Builder do
               unquote(
               deconstruct_clauses ++
               quote do
-                [0 | rest] ->
+                [-257 | rest] -> # EOF
                   {<<>>, rest}
                 [opcode | rest] ->
                   IO.puts("[Error] Can't decode: #{opcode}")
@@ -59,7 +59,7 @@ defmodule Assembler.AVR.Instructions.Builder do
             end
             |> case do
               {text, []}   -> asm <> text
-              {text, rest} -> deconstruct(rest, text <> asm)
+              {text, rest} -> deconstruct(rest, asm <> text)
             end
           end
         end

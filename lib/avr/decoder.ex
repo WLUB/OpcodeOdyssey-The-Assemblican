@@ -2,12 +2,13 @@ defmodule Assembler.AVR.Decoder do
   @moduledoc false
 
   alias Assembler.Utility
-  use Assembler.AVR.Instructions.Builder, [
-    Assembler.AVR.Instructions.LDI,
-    Assembler.AVR.Instructions.RCALL,
-    Assembler.AVR.Instructions.STS,
-    Assembler.AVR.Instructions.RET,
-    Assembler.AVR.Instructions.RJMP,
+  use Assembler.AVR.Instruction.Builder, [
+    Assembler.AVR.Instruction.LDI,
+    Assembler.AVR.Instruction.RCALL,
+    Assembler.AVR.Instruction.STS,
+    Assembler.AVR.Instruction.RET,
+    Assembler.AVR.Instruction.RJMP,
+    Assembler.AVR.Instruction.NOP
   ]
   import Bitwise
 
@@ -18,7 +19,7 @@ defmodule Assembler.AVR.Decoder do
     data
     |> Enum.map(fn
       ":00000001FF" ->
-        [0, 0] # EOF
+        [-1, -1] # EOF
       <<":", size::binary-2, address::binary-4, _record::binary-2, hex::binary>> ->
         {size, <<>>}    = Integer.parse(size, 16)    # :error on fail
         {address, <<>>} = Integer.parse(address, 16) # :error on fail
@@ -32,7 +33,7 @@ defmodule Assembler.AVR.Decoder do
 
         instructions =
           instructions
-          # |> Enum.reverse()
+          |> Enum.reverse()
           |> Enum.map(&(elem(Integer.parse(&1, 16), 0)))
 
         checksum =
@@ -45,15 +46,14 @@ defmodule Assembler.AVR.Decoder do
         instructions
     end)
     |> Utility.flatten_list()
-    |> Utility.append_to_end(0)
-    |> Utility.append_to_end(0)
     |> convert_to_word()
     |> deconstruct()
   end
 
+  defp convert_to_word(rest, acc \\ [])
   defp convert_to_word([], acc), do: acc
-  defp convert_to_word([a, b | rest], acc \\ []),
-  do:  convert_to_word(rest, acc ++ [(a <<< 8) + b])
+  defp convert_to_word([a, b | rest], acc),
+  do:  convert_to_word(rest, acc ++ [(b <<< 8) + a])
 
   defp control_size(a, b) when a == b, do: :ok
   defp control_size(_, _), do: Utility.exit_msg("Not a correct size")

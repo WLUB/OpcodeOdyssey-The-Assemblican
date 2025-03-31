@@ -4,12 +4,15 @@
 /deps/
 /doc/
 /.fetch
+/.elixir_ls
 erl_crash.dump
 *.ez
 assembler-*.tar
 /tmp/
+/asm/
 .vscode/*
 .history/
+assembler
 .DS_Store
 .AppleDouble
 .LSOverride
