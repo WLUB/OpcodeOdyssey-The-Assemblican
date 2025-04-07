@@ -3,6 +3,11 @@ defmodule Assembler.Intel64.AssemblerMovTest do
     doctest Assembler
     alias Assembler.Intel64.Build
 
+    ###############
+    # 64-bit test #
+    ###############
+
+
     test "mov reg0 imm64" do
       """
       section .text
@@ -192,6 +197,203 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       |> Build.build()
       |> then(fn %{".text" => data} = _ ->
         assert(data == <<0x49, 0xBF, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      end)
+    end
+
+    ###############
+    # 32-bit test #
+    ###############
+
+
+    test "mov reg0 imm32" do
+      """
+      section .text
+      mov eax 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0xB8, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg1 imm32" do
+      """
+      section .text
+      mov ecx 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0xB9, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg2 imm32" do
+      """
+      section .text
+      mov edx 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0xBA, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg3 imm32" do
+      """
+      section .text
+      mov ebx 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0xBB, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg4 imm32" do
+      """
+      section .text
+      mov esp 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0xBC, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg5 imm32" do
+      """
+      section .text
+      mov ebp 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0xBD, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg6 imm32" do
+      """
+      section .text
+      mov esi 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0xBE, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg7 imm32" do
+      """
+      section .text
+      mov edi 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0xBF, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg8 imm32" do
+      """
+      section .text
+      mov r8d 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0x41, 0xB8, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg9 imm32" do
+      """
+      section .text
+      mov r9d 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0x41, 0xB9, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg10 imm32" do
+      """
+      section .text
+      mov r10d 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0x41, 0xBA, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg11 imm32" do
+      """
+      section .text
+      mov r11d 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0x41, 0xBB, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg12 imm32" do
+      """
+      section .text
+      mov r12d 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0x41, 0xBC, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg13 imm32" do
+      """
+      section .text
+      mov r13d 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0x41, 0xBD, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg14 imm32" do
+      """
+      section .text
+      mov r14d 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0x41, 0xBE, 10, 0, 0, 0>>)
+      end)
+    end
+
+    test "mov reg15 imm32" do
+      """
+      section .text
+      mov r15d 10
+      """
+      |> Build.text_to_instructions()
+      |> Build.build()
+      |> then(fn %{".text" => data} = _ ->
+        assert(data == <<0x41, 0xBF, 10, 0, 0, 0>>)
       end)
     end
   end
