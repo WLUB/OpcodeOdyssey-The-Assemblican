@@ -49,7 +49,7 @@ mov edx 13
 syscall
 
 mov eax 0x2000001
-mov edi 0
+xor edi edi
 syscall
 
 section .data

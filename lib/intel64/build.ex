@@ -3,7 +3,8 @@ defmodule Assembler.Intel64.Build do
     Assembler.Intel64.Instruction.INT,
     Assembler.Intel64.Instruction.LEA,
     Assembler.Intel64.Instruction.MOV,
-    Assembler.Intel64.Instruction.SYSCALL
+    Assembler.Intel64.Instruction.SYSCALL,
+    Assembler.Intel64.Instruction.XOR
   ]
 
   alias Assembler.Intel64.MachO.Packer
@@ -25,10 +26,13 @@ defmodule Assembler.Intel64.Build do
     |> Enum.reduce(@init_sections, fn
       [:global, name], sections ->
         Map.put(sections, "global", Map.fetch!(sections, "global") ++ [name])
+
       [:section, section], sections ->
         Map.put(sections, "current", section)
+
       instruction, %{"current" => ".text"} = sections ->
         Map.put(sections, ".text", sections[".text"] ++ [parse_params(instruction)])
+
       data, %{"current" => ".data"} = sections ->
         Map.put(sections, ".data", sections[".data"] ++ [parse_data_section(data)])
     end)
@@ -89,7 +93,6 @@ defmodule Assembler.Intel64.Build do
     end)
   end
 
-
   defp encode_instruction([instruction | params]) do
     instruction
     |> Atom.to_string()
@@ -98,7 +101,6 @@ defmodule Assembler.Intel64.Build do
     |> struct([parameters: params])
     |> then(&(construct(&1)))
   end
-
 
   defp parse_data_section([label, "db" | data] = line) do
     label = Atom.to_string(label)
