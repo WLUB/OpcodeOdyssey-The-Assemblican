@@ -1,5 +1,4 @@
 defmodule Assembler.Intel64.MachO.Symtab do
-  import Bitwise
   @symtab_cmd_size 24
   @nlist_size 16
 

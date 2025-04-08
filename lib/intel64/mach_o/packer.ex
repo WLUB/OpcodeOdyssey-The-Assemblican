@@ -6,13 +6,37 @@ defmodule Assembler.Intel64.MachO.Packer do
 
   import Bitwise
 
-  @doc false
-  def pack(%{".text" => code, ".data" => data, "global" => globals, ".text_labels" => text_labels}) do
-    code_size = byte_size(code)
+  defp nlist_entries(%{".data" => data, "global" => globals, ".text_labels" => text_labels}) do
+     # Text labels
+     {text_nlist_entries, table_content_offset} =
+     Enum.reduce(Map.keys(text_labels), {<<>>, 1}, fn
+       label, {acc, offset} ->
+         entry =
+         bor(0x0e, if(label in globals, do: 0x01, else: 0x00))
+         |> Symtab.nlist_entry(offset, 1, text_labels[label])
 
-    data_binary = Enum.reduce(data, <<>>, &(&2 <> :erlang.list_to_binary(String.to_charlist(&1.data))))
-    data_size = Enum.reduce(data, 0, &(&2 + &1.size))
+         {acc <> entry, offset + 1 + byte_size(label)}
+     end)
 
+     # Data labels
+     data_nlist_entries =
+     Enum.reduce(data, {<<>>, 0, table_content_offset}, fn
+       %Data{size: size, name: name} = _, {entries, offset, table_offset} ->
+         entry =
+         bor(0x0e, if(name in globals, do: 0x01, else: 0x00))
+         |> Symtab.nlist_entry(table_offset, 2, offset)
+
+         {entries <> entry, offset + size, table_offset + 1 + byte_size(name)}
+     end)
+     |> elem(0)
+
+     nlist_entries = text_nlist_entries <> data_nlist_entries
+     nlist_entries_size = byte_size(nlist_entries)
+
+     {nlist_entries, nlist_entries_size}
+  end
+
+  defp relocation(%{".data" => data, ".text_labels" => text_labels}) do
     data =
     Enum.reduce(data, {[], length(Map.keys(text_labels)) - 1}, fn
       %Data{} = d, {data_list, index} ->
@@ -21,35 +45,22 @@ defmodule Assembler.Intel64.MachO.Packer do
     |> elem(0)
     |> Enum.map(&(Data.relocation_entry(&1)))
 
-    reloc_entry_size = Enum.reduce(data, 0, &(&2 + byte_size(&1.relocation_entries)))
-    reloc_entry = Enum.reduce(data, <<>>, &(&2 <> &1.relocation_entries))
-    reloc_entry_num = trunc(reloc_entry_size / 8)
+    reloc_entry_size  = Enum.reduce(data, 0, &(&2 + byte_size(&1.relocation_entries)))
+    reloc_entry       = Enum.reduce(data, <<>>, &(&2 <> &1.relocation_entries))
+    reloc_entry_num   = trunc(reloc_entry_size / 8)
 
-    # Adding text labels to nlist_64
-    {text_nlist_entries, table_content_offset} =
-    Enum.reduce(Map.keys(text_labels), {<<>>, 1}, fn
-      label, {acc, offset} ->
+    {reloc_entry_size, reloc_entry, reloc_entry_num}
+  end
 
-        entry =
-        bor(0x0e, if(label in globals, do: 0x01, else: 0x00))
-        |> Symtab.nlist_entry(offset, 1, text_labels[label])
+  @doc false
+  def pack(%{".text" => code, ".data" => data, ".text_labels" => text_labels} = layout) do
+    code_size = byte_size(code)
 
-        {acc <> entry, offset + 1 + byte_size(label)}
-    end)
+    data_binary = Enum.reduce(data, <<>>, &(&2 <> :erlang.list_to_binary(String.to_charlist(&1.data))))
+    data_size = Enum.reduce(data, 0, &(&2 + &1.size))
 
-    # Adding data labels to nlist_64
-    data_nlist_entries = Enum.reduce(data, {<<>>, 0, table_content_offset}, fn
-      %Data{size: size, name: name} = _, {entries, offset, table_offset} ->
-        entry =
-        bor(0x0e, if(name in globals, do: 0x01, else: 0x00))
-        |> Symtab.nlist_entry(table_offset, 2, offset)
-
-        {entries <> entry, offset + size, table_offset + 1 + byte_size(name)}
-    end)
-    |> elem(0)
-
-    nlist_entries = text_nlist_entries <> data_nlist_entries
-    nlist_entries_size = byte_size(nlist_entries)
+    {reloc_entry_size, reloc_entry, reloc_entry_num} = relocation(layout)
+    {nlist_entries, nlist_entries_size} = nlist_entries(layout)
 
     header_size = Header.header_size()
     lc_symtab_size = Symtab.symtab_cmd_size()
@@ -78,21 +89,21 @@ defmodule Assembler.Intel64.MachO.Packer do
     total_load_commands_size = segment_command_size + lc_symtab_size + byte_size(lc_build_version)
 
     # Calculate offsets after all load commands
-    current_offset = align.(header_size + total_load_commands_size, 4)
-    text_section_offset = current_offset
-    current_offset = align.(text_section_offset + code_size, 4)
-    data_section_offset = current_offset
-    current_offset = align.(data_section_offset + data_size, 4)
+    current_offset          = align.(header_size + total_load_commands_size, 4)
+    text_section_offset     = current_offset
+    current_offset          = align.(text_section_offset + code_size, 4)
+    data_section_offset     = current_offset
+    current_offset          = align.(data_section_offset + data_size, 4)
     relocations_file_offset = current_offset
-    current_offset = align.(relocations_file_offset + reloc_entry_size, 4)
-    symtab_offset = current_offset
-    current_offset = align.(symtab_offset + nlist_entries_size, 4)
-    string_table_offset = current_offset
+    current_offset          = align.(relocations_file_offset + reloc_entry_size, 4)
+    symtab_offset           = current_offset
+    current_offset          = align.(symtab_offset + nlist_entries_size, 4)
+    string_table_offset     = current_offset
 
-    text_vmaddr = 0 #0x1000
-    data_vmaddr = 0 #align_page(text_vmaddr + code_size, 0x1000)
-    segment_vmaddr = 0 #text_vmaddr
-    segment_vmsize = (code_size + data_size) # - text_vmaddr |> align_page()
+    text_vmaddr     = 0
+    data_vmaddr     = 0
+    segment_vmaddr  = 0
+    segment_vmsize  = (code_size + data_size)
 
     # Section headers with offsets
     text_section = Segment.section_header(
@@ -111,6 +122,7 @@ defmodule Assembler.Intel64.MachO.Packer do
       7, 5, 0
     )
 
+    # Content table
     text_table_content = Enum.reduce(Map.keys(text_labels), <<>>, &(&2 <> "#{&1}\0"))
     data_table_content = Enum.reduce(data, <<>>, &(&2 <> "#{&1.name}\0"))
     string_table_content = <<0>> <> text_table_content <> data_table_content
@@ -124,6 +136,7 @@ defmodule Assembler.Intel64.MachO.Packer do
       if size > 0, do: :binary.copy(<<0>>, size), else: <<>>
     end
 
+    # Final layout
     Header.header(total_load_commands_size, 3) <>
     segment_command <>
     lc_symtab <>
