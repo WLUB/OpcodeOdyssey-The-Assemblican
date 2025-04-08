@@ -4,8 +4,10 @@ defmodule Assembler.Intel64.MachO.Packer do
   alias Assembler.Intel64.MachO.Symtab
   alias Assembler.Intel64.Data
 
+  import Bitwise
+
   @doc false
-  def pack(%{".text" => code, ".data" => data, ".text_labels" => text_labels}) do
+  def pack(%{".text" => code, ".data" => data, "global" => globals, ".text_labels" => text_labels}) do
     code_size = byte_size(code)
 
     data_binary = Enum.reduce(data, <<>>, &(&2 <> :erlang.list_to_binary(String.to_charlist(&1.data))))
@@ -27,14 +29,22 @@ defmodule Assembler.Intel64.MachO.Packer do
     {text_nlist_entries, table_content_offset} =
     Enum.reduce(Map.keys(text_labels), {<<>>, 1}, fn
       label, {acc, offset} ->
-        {acc <> Symtab.nlist_entry(offset, 1, text_labels[label]), offset + 1 + byte_size(label)}
+
+        entry =
+        bor(0x0e, if(label in globals, do: 0x01, else: 0x00))
+        |> Symtab.nlist_entry(offset, 1, text_labels[label])
+
+        {acc <> entry, offset + 1 + byte_size(label)}
     end)
 
     # Adding data labels to nlist_64
     data_nlist_entries = Enum.reduce(data, {<<>>, 0, table_content_offset}, fn
       %Data{size: size, name: name} = _, {entries, offset, table_offset} ->
-        nlist = Symtab.nlist_entry(table_offset, 2, offset, 0x0e)
-        {entries <> nlist, offset + size, table_offset + 1 + byte_size(name)}
+        entry =
+        bor(0x0e, if(name in globals, do: 0x01, else: 0x00))
+        |> Symtab.nlist_entry(table_offset, 2, offset)
+
+        {entries <> entry, offset + size, table_offset + 1 + byte_size(name)}
     end)
     |> elem(0)
 
