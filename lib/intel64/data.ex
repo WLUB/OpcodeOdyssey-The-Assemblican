@@ -18,21 +18,22 @@ defmodule Assembler.Intel64.Data do
   @doc false
   def relocation_entry(%Data{references: refs, symbol_index: index} = data) do
     Enum.reduce(refs, <<>>, fn address, acc ->
-      pcrel = 1
-      length = 2
-      extern = 1
-      type = 1  # X86_64_RELOC_SIGNED
+      pcrel   = 1
+      length  = 2
+      extern  = 1
+      type    = 1  # X86_64_RELOC_SIGNED
 
       packed_info =
-        (index) |||
-        (pcrel <<< 24) |||
+        (index        ) |||
+        (pcrel  <<< 24) |||
         (length <<< 25) |||
         (extern <<< 27) |||
-        (type <<< 28)
+        (type   <<< 28)
 
-      acc <> <<
-        address::little-unsigned-integer-size(32),
-        packed_info::little-unsigned-integer-size(32)
+      acc <>
+      <<
+        address     :: little-unsigned-integer-size(32),
+        packed_info :: little-unsigned-integer-size(32)
       >>
     end)
     |> then(fn relocation_entries ->
