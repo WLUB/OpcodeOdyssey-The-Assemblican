@@ -10,8 +10,8 @@ defmodule Assembler.Intel64.AssemblerIntTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xCD, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xCD, 0>>)
       end)
     end
 
@@ -22,8 +22,8 @@ defmodule Assembler.Intel64.AssemblerIntTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xCD, 1>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xCD, 1>>)
       end)
     end
 
@@ -34,8 +34,8 @@ defmodule Assembler.Intel64.AssemblerIntTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xCD, 2>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xCD, 2>>)
       end)
     end
 
@@ -46,8 +46,8 @@ defmodule Assembler.Intel64.AssemblerIntTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xCC>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xCC>>)
       end)
     end
 
@@ -59,8 +59,8 @@ defmodule Assembler.Intel64.AssemblerIntTest do
         """
         |> Build.text_to_instructions()
         |> Build.build()
-        |> then(fn %{".text" => data} = _ ->
-          assert(data == <<0xCD, i>>)
+        |> then(fn %{".text" => [ins]} = _ ->
+          assert(ins.data == <<0xCD, i>>)
         end)
       end)
     end

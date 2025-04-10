@@ -10,8 +10,8 @@ defmodule Assembler.Intel64.AssemblerXorTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x31, 0xF8>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x31, 0xF8>>)
       end)
     end
 
@@ -22,8 +22,8 @@ defmodule Assembler.Intel64.AssemblerXorTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x45, 0x31, 0xF8>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x45, 0x31, 0xF8>>)
       end)
     end
 
@@ -34,8 +34,8 @@ defmodule Assembler.Intel64.AssemblerXorTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x44, 0x31, 0xF8>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x44, 0x31, 0xF8>>)
       end)
     end
 
@@ -46,8 +46,8 @@ defmodule Assembler.Intel64.AssemblerXorTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x41, 0x31, 0xC7>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x41, 0x31, 0xC7>>)
       end)
     end
 
@@ -61,7 +61,8 @@ defmodule Assembler.Intel64.AssemblerXorTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
+      |> then(fn %{".text" => ins} = _ ->
+        data = Enum.reduce(ins, <<>>, &(&2 <> &1.data))
         assert(data == <<0x48, 0x31, 0xF8, 0x4D, 0x31, 0xF8, 0x4C, 0x31, 0xF8, 0x49, 0x31, 0xC7>>)
       end)
     end

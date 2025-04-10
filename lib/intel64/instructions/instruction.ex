@@ -7,7 +7,9 @@ defmodule Assembler.Intel64.Instruction do
       @enforce_keys [:address, :parameters]
       defstruct [
         address: 0,
-        parameters: []
+        section_offset: 0,
+        parameters: [],
+        data: <<>>
       ]
 
       def get_construct(), do: unquote(construct)

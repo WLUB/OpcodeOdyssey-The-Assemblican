@@ -15,8 +15,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x48, 0xB8, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x48, 0xB8, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -27,8 +27,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x48, 0xB9, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x48, 0xB9, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -39,8 +39,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x48, 0xBA, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x48, 0xBA, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -51,8 +51,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x48, 0xBB, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x48, 0xBB, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -63,8 +63,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x48, 0xBC, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x48, 0xBC, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -75,8 +75,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x48, 0xBD, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x48, 0xBD, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -87,8 +87,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x48, 0xBE, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x48, 0xBE, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -99,8 +99,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x48, 0xBF, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x48, 0xBF, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -111,8 +111,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x49, 0xB8, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x49, 0xB8, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -123,8 +123,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x49, 0xB9, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x49, 0xB9, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -135,8 +135,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x49, 0xBA, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x49, 0xBA, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -147,8 +147,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x49, 0xBB, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x49, 0xBB, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -159,8 +159,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x49, 0xBC, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x49, 0xBC, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -171,8 +171,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x49, 0xBD, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x49, 0xBD, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -183,8 +183,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x49, 0xBE, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x49, 0xBE, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -195,8 +195,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x49, 0xBF, 10, 0, 0, 0, 0, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x49, 0xBF, 10, 0, 0, 0, 0, 0, 0, 0>>)
       end)
     end
 
@@ -212,8 +212,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xB8, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xB8, 10, 0, 0, 0>>)
       end)
     end
 
@@ -224,8 +224,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xB9, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xB9, 10, 0, 0, 0>>)
       end)
     end
 
@@ -236,8 +236,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xBA, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xBA, 10, 0, 0, 0>>)
       end)
     end
 
@@ -248,8 +248,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xBB, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xBB, 10, 0, 0, 0>>)
       end)
     end
 
@@ -260,8 +260,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xBC, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xBC, 10, 0, 0, 0>>)
       end)
     end
 
@@ -272,8 +272,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xBD, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xBD, 10, 0, 0, 0>>)
       end)
     end
 
@@ -284,8 +284,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xBE, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xBE, 10, 0, 0, 0>>)
       end)
     end
 
@@ -296,8 +296,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0xBF, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0xBF, 10, 0, 0, 0>>)
       end)
     end
 
@@ -308,8 +308,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x41, 0xB8, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x41, 0xB8, 10, 0, 0, 0>>)
       end)
     end
 
@@ -320,8 +320,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x41, 0xB9, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x41, 0xB9, 10, 0, 0, 0>>)
       end)
     end
 
@@ -332,8 +332,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x41, 0xBA, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x41, 0xBA, 10, 0, 0, 0>>)
       end)
     end
 
@@ -344,8 +344,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x41, 0xBB, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x41, 0xBB, 10, 0, 0, 0>>)
       end)
     end
 
@@ -356,8 +356,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x41, 0xBC, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x41, 0xBC, 10, 0, 0, 0>>)
       end)
     end
 
@@ -368,8 +368,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x41, 0xBD, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x41, 0xBD, 10, 0, 0, 0>>)
       end)
     end
 
@@ -380,8 +380,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x41, 0xBE, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x41, 0xBE, 10, 0, 0, 0>>)
       end)
     end
 
@@ -392,8 +392,8 @@ defmodule Assembler.Intel64.AssemblerMovTest do
       """
       |> Build.text_to_instructions()
       |> Build.build()
-      |> then(fn %{".text" => data} = _ ->
-        assert(data == <<0x41, 0xBF, 10, 0, 0, 0>>)
+      |> then(fn %{".text" => [ins]} = _ ->
+        assert(ins.data == <<0x41, 0xBF, 10, 0, 0, 0>>)
       end)
     end
   end

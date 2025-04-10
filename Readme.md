@@ -35,25 +35,43 @@ rjmp loop
 Disassembling is currently not supported. The output targets 64-bit Mach-O files with a minimum OS and SDK version of 13. Many features and functionalities are missing and will likely never be supported.
 
 ### Syntax
-Instead of `[rel <name>]` use `#<name>`. 
-In the data section only text token is supported. 
+Instead of `[rel <label>]` or `<label>` use `#<label>`.   
+The assembly syntax uses spaces instead of commas to separate operands.   
 
 ```
-global _main
-section .text
-_main:
-mov eax 0x2000004
-mov edi 1
-lea rsi #hello
-mov edx 13
-syscall
+; Example program demonstrating
+; how the syntax looks
 
-mov eax 0x2000001
-xor edi edi
-syscall
+extern _printf
+global _main
+
+section .text
+
+external_function:
+    lea     rdi #hello_printf   
+    xor     eax eax             
+    call    #_printf           
+    ret     ; inline comments is
+            ; allowed
+function:
+    mov     eax 0x2000004
+    mov     edi 1
+    lea     rsi #hello
+    mov     edx 0b1110
+    syscall
+    ret
+
+_main:
+    call    #function
+    call    #external_function
+
+    mov     eax 0x2000001
+    xor     edi edi
+    syscall
 
 section .data
-hello: db Hello, World!\0
+    hello: db "Hello, World!", 0x0A, 0x00
+    hello_printf: db "Hello from printf!", 0x0A, 0x00
 ```
 ### Creating an executable
 The assembler will generate an object file, in order to make it into an executable you need to link it.
