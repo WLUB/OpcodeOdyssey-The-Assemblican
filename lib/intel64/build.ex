@@ -30,7 +30,7 @@ defmodule Assembler.Intel64.Build do
         Map.put(sections, "global", Map.fetch!(sections, "global") ++ [name])
 
       [:extern, label], sections ->
-        Map.put(sections, "extern", Map.fetch!(sections, "global") ++ [struct(Label, [section: :extern, name: label])])
+        Map.put(sections, "extern", Map.fetch!(sections, "extern") ++ [struct(Label, [section: :extern, name: label])])
 
       [:section, section], sections ->
         Map.put(sections, "current", section)
